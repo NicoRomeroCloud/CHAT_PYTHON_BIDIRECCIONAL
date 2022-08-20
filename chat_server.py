@@ -1,41 +1,39 @@
-#chat server side  
 from ctypes.wintypes import PLARGE_INTEGER
 from email import message, message_from_string
 from http import client
 import socket
 
-#define constans to be used
-
+#definiendo constantes a usar
 HOST_IP= socket.gethostbyname(socket.gethostname());
 HOST_PORT= 12345;
 ENCODER = "utf-8";
 BYTESIZE = 1024;
 
-#create a server socket
+#creación del socket del servidor
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
 server_socket.bind((HOST_IP, HOST_PORT));
 server_socket.listen();
 
-#Accept any incoming connection and let them know they are connected
+#aceptando cualquier conexión entrante y haciedole saber que esta conectado.
 print("Servidor corriendo...");
 client_socket, client_address = server_socket.accept();
 client_socket.send("Estas conecyado al servidor... C:".encode(ENCODER));
 
-#sen/recieve messages
+#enviar/recibir mensajes
 while True:
-    #Recieve information from the client
+    #recibiendo información(mensajes) del cliente
     message = client_socket.recv(BYTESIZE).decode(ENCODER);
 
-    #quit if the client socket wants to quit, else display the message
-    if message == "quit":
-        client_socket.send("quit".encode(ENCODER));
-        print("Finalizando chaooo");
+    #salir del socket cuando el cliente quiera, si no, se muestra el mensaje enviado por el cliente
+    if message == "salir":
+        client_socket.send("salir".encode(ENCODER));
+        print("Finalizando servidor chaooo");
         break;
     else:
         print(f"{message}");
         message = input("Mensaje: ");
         client_socket.send(message.encode(ENCODER));
 
-#CLOSE THE SOCKET
+#cerrando el socket
 server_socket.close();
